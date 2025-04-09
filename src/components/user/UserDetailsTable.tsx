@@ -1,5 +1,6 @@
 "use client";
 
+import { API_ENDPOINTS } from "@/config/api";
 import { useEffect, useState } from "react";
 
 interface Component {
@@ -30,7 +31,7 @@ export default function UserDetailTable() {
     const fetchUserData = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('http://localhost:8082/admin/user');
+        const response = await fetch(API_ENDPOINTS.ADMIN_USER);
         if (!response.ok) throw new Error('Failed to fetch user data');
         const data = await response.json();
         setUser(data);

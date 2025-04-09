@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { GripVertical, Save } from "lucide-react";
+import { API_ENDPOINTS } from "@/config/api";
 
 interface Component {
   id: number;
@@ -41,7 +42,7 @@ export default function AdminView() {
   const fetchPages = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch('http://localhost:8082/onboarding/pages');
+      const response = await fetch(API_ENDPOINTS.PAGES);
       if (!response.ok) throw new Error('Failed to fetch pages data');
       const data = await response.json();
       setPages(data);
@@ -50,34 +51,6 @@ export default function AdminView() {
       setError('Failed to load pages data');
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const updatePageSettings = async (updatedPages: PageData[]) => {
-    try {
-      setIsSaving(true);
-      const requestBody: UpdatePagesRequest = {
-        pages: updatedPages.map(page => ({
-          pageId: page.id,
-          componentIds: page.components.map(comp => comp.component.id)
-        }))
-      };
-
-      const response = await fetch('http://localhost:8082/admin/component/setting', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(requestBody)
-      });
-
-      if (!response.ok) throw new Error('Failed to update page settings');
-      await fetchPages();
-    } catch (error) {
-      console.error('Error updating page settings:', error);
-      alert('Failed to save changes. Please try again.');
-    } finally {
-      setIsSaving(false);
     }
   };
 
@@ -106,7 +79,7 @@ export default function AdminView() {
         }))
       };
 
-      const response = await fetch('http://localhost:8082/admin/component/setting', {
+      const response = await fetch(API_ENDPOINTS.ADMIN_COMPONENT_SETTING, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

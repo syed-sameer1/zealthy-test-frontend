@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { API_ENDPOINTS } from "@/config/api";
 
 interface Component {
   id: number;
@@ -61,7 +62,7 @@ export default function Register() {
     const fetchPages = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch('http://localhost:8082/onboarding/pages');
+        const response = await fetch(API_ENDPOINTS.PAGES);
         if (!response.ok) throw new Error('Failed to fetch page data');
         const data = await response.json();
         setPages(data);
@@ -87,9 +88,11 @@ export default function Register() {
   const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8082/onboarding/user', {
+      const response = await fetch(API_ENDPOINTS.REGISTER_USER, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
           email: formData.email,
           password: formData.password,
@@ -138,9 +141,11 @@ export default function Register() {
         }))
       ).filter(comp => comp.data !== '{}');
 
-      const response = await fetch(`http://localhost:8082/onboarding/user/${userId}`, {
+      const response = await fetch(API_ENDPOINTS.UPDATE_USER(userId), {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ components })
       });
 
